@@ -90,19 +90,15 @@ export default async (req, res) => {
       showStats.includes("discussions_answered"),
     );
 
-    let cacheSeconds = clampValue(
-      parseInt(cache_seconds || CONSTANTS.CARD_CACHE_SECONDS, 10),
-      CONSTANTS.TWELVE_HOURS,
-      CONSTANTS.TWO_DAY,
-    );
-    cacheSeconds = process.env.CACHE_SECONDS
-      ? parseInt(process.env.CACHE_SECONDS, 10) || cacheSeconds
-      : cacheSeconds;
-
     res.setHeader(
-      "Cache-Control",
-      `max-age=${cacheSeconds}, s-maxage=${cacheSeconds}, stale-while-revalidate=${CONSTANTS.ONE_DAY}`,
+      "Vercel-CDN-Cache-Control",
+      `public, max-age=${CONSTANTS.ONE_DAY}, stale-while-revalidate=${CONSTANTS.ONE_DAY}`,
     );
+    res.setHeader(
+      "CDN-Cache-Control",
+      `public, max-age=${CONSTANTS.ONE_DAY}, stale-while-revalidate=${CONSTANTS.ONE_DAY}`,
+    );
+    res.setHeader("Cache-Control", `public, max-age=${CONSTANTS.TWO_HOURS}`);
 
     return res.send(
       renderStatsCard(stats, {
