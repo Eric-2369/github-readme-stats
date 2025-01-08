@@ -82,18 +82,15 @@ export default async (req, res) => {
       count_weight,
     );
 
-    let cacheSeconds = parseInt(
-      cache_seconds || CONSTANTS.TOP_LANGS_CACHE_SECONDS,
-      10,
-    );
-    cacheSeconds = process.env.CACHE_SECONDS
-      ? parseInt(process.env.CACHE_SECONDS, 10) || cacheSeconds
-      : cacheSeconds;
-
     res.setHeader(
-      "Cache-Control",
-      `max-age=${cacheSeconds / 2}, s-maxage=${cacheSeconds}`,
+      "Vercel-CDN-Cache-Control",
+      `public, max-age=${CONSTANTS.ONE_DAY}, stale-while-revalidate=${CONSTANTS.ONE_DAY}`,
     );
+    res.setHeader(
+      "CDN-Cache-Control",
+      `public, max-age=${CONSTANTS.ONE_DAY}, stale-while-revalidate=${CONSTANTS.ONE_DAY}`,
+    );
+    res.setHeader("Cache-Control", `public, max-age=${CONSTANTS.TWO_HOURS}`);
 
     return res.send(
       renderTopLanguages(topLangs, {
