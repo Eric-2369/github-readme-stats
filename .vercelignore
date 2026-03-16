@@ -13,3 +13,9 @@ tests
 .prettierignore
 .pretterrc.json
 codecov.yml
+
+# Only deploy the stats card (/api) and top languages card (/api/top-langs).
+api/gist.js
+api/pin.js
+api/wakatime.js
+api/status
